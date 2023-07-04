@@ -9,11 +9,11 @@ import { IdType } from "../common-types";
 
 interface Props {
     comments: Comment[],
-    userId: IdType,
+    user: User,
     onCommentDeleteCallback: (commentId: IdType) => {}
 }
 
-const CommentsList = ({ comments, userId, onCommentDeleteCallback }: Props) => {
+const CommentsList = ({ comments, user, onCommentDeleteCallback }: Props) => {
 
     return (<Box sx={{ width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         {/* <Typography variant='h6' textAlign={'center'} mt={'20px'}>Comments:</Typography> */}
@@ -22,12 +22,12 @@ const CommentsList = ({ comments, userId, onCommentDeleteCallback }: Props) => {
                 <ListItem alignItems="flex-start"
                     key={comment.id}
                     secondaryAction={
-                       (comment.postedBy as User).id === userId && <>
-                            <Link to={`/CommentsList/${comment.id}`}>
+                       ((comment.postedBy as User).id === user.id || user.role === 'admin') && <>
+                            {/* <Link to={`/CommentsList/${comment.id}`}>
                                 <IconButton>
                                     <EditIcon />
                                 </IconButton>
-                            </Link>
+                            </Link> */}
                             <IconButton onClick={() => onCommentDeleteCallback(comment.id)}>
                                 <DeleteIcon />
                             </IconButton>

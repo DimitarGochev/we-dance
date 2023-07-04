@@ -49,7 +49,8 @@ export async function handleRequest<D>(url: string, options?: RequestInit) {
     try {
         const resp = await fetch(url, options);
         if(resp.status >= 400) {
-            return Promise.reject(resp.body);
+            const parsedError = await resp.json();
+            return Promise.reject(parsedError);
         }
         return resp.json() as D;
     } catch(err) {

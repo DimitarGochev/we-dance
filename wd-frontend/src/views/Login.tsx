@@ -1,5 +1,5 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { UserContext } from "../App";
 import { useNavigate } from "react-router-dom";
@@ -8,7 +8,8 @@ import { LoginService } from "../services/login-service";
 
 const Login = () => {
     const { loggedUser, setLoggedUser } = useContext(UserContext);
-    const { register, handleSubmit, watch, formState: { errors } } = useForm();
+    const { register, handleSubmit, formState: { errors } } = useForm();
+    const [error, setError] = useState<{ message: string }>();
     
     const navigate = useNavigate();
     const onSubmit = (data: any) => {
@@ -16,7 +17,7 @@ const Login = () => {
             sessionStorage.setItem('loggedUser', JSON.stringify(user));
             setLoggedUser(user);
             navigate('/home');
-        }).catch(() => {});
+        }).catch((err) => setError(err));
     }
     const onRegister = () => {
         navigate('/register');
@@ -57,6 +58,7 @@ const Login = () => {
                     onClick={() => onRegister()}
                 >Register</Button>
             </Box>
+            { error && <Typography variant='subtitle1' color='red' mb={'20px'}>{error.message}</Typography>}
         </Box>
     )
 }

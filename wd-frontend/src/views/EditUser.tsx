@@ -9,9 +9,7 @@ const EditUser = () => {
     const [currentUser, setCurrentUser] = useState<User>();
     const { register, handleSubmit, formState: { errors } } = useForm();
     const onSubmit = (user: any) => {
-        user.id = id;
-        user.dateOfLastModification = new Date();
-        UsersClientService.update(user).then((res: any) => navigate('/users')).catch((error) => console.log(error));
+        UsersClientService.update({...currentUser, ...user}).then((res: any) => navigate('/users')).catch((error) => console.log(error));
     }
 
     const navigate = useNavigate();

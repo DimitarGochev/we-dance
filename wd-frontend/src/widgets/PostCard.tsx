@@ -71,7 +71,7 @@ const PostCard = ({ post, onComment, onDeleteComment, onEditPost, onDeletePost }
   };
 
   React.useEffect(() => {
-    if (loggedUser.id !== (post.postedBy as User).id && loggedUser.role !== 'admin') {
+    if (loggedUser?.id !== (post.postedBy as User).id && loggedUser?.role !== 'admin') {
       setShowCardSettings(false);
     }
   }, [loggedUser]);
@@ -151,7 +151,7 @@ const PostCard = ({ post, onComment, onDeleteComment, onEditPost, onDeletePost }
               </InputAdornment>
             }} />
           <Typography paragraph>Comments:</Typography>
-          <CommentsList comments={post.comments as Comment[]} userId={loggedUser.id} onCommentDeleteCallback={(id) => onDeleteComment(id)} />
+          <CommentsList comments={post.comments as Comment[]} user={loggedUser} onCommentDeleteCallback={(id) => onDeleteComment(id)} />
         </CardContent>
       </Collapse>
     </Card>

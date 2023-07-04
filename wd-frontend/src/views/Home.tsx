@@ -1,17 +1,13 @@
 import { useContext, useEffect, useState } from "react";
 import { Post } from "../models/Post";
-import { Avatar, Box, IconButton, List, ListItem, ListItemAvatar, ListItemText, Typography } from "@mui/material";
+import { Box, List, Typography } from "@mui/material";
 import { PostsClientService } from "../services/posts-service";
-import React from "react";
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
 import { useNavigate } from "react-router-dom";
 import AddPost from "../widgets/AddPost";
 import PostCard from "../widgets/PostCard";
 import { CommentsClientService } from "../services/comments-service";
 import { UserContext } from "../App";
 import { IdType } from "../common-types";
-import { Comment } from "../models/Comment";
 
 const Home = () => {
     const { loggedUser, setLoggedUser } = useContext(UserContext);
@@ -48,6 +44,7 @@ const Home = () => {
 
     return (
         <Box sx={{ width: '100%', minHeight: 'calc(100vh - 128px)', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <Typography variant="h5" mb={'20px'}>Welcome, { loggedUser?.firstName }</Typography>
             <AddPost onPostAdded={() => updatePosts()}/>
             <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
                 {posts.map(post => (<PostCard key={post.id} post={post} 

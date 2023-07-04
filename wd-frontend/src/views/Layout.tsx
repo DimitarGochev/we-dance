@@ -41,10 +41,13 @@ const Layout = () => {
     };
 
     useEffect(() => {
-        if (loggedUser?.email && loggedUser?.role !== 'admin') {
+        if (!loggedUser || !loggedUser.email) {
+            navigate('/login');
+        } else if (loggedUser.email && loggedUser.role !== 'admin') {
             setPages(pages.filter(page => page.name !== 'Users'));
         } else {
             setPages(allPages);
+            navigate('/home');
         }
     }, [loggedUser]);
 
@@ -52,7 +55,7 @@ const Layout = () => {
         <Box>
             <AppBar position="static">
                 <Toolbar>
-                   {loggedUser?.avatar && <> <IconButton
+                    {loggedUser?.avatar && <> <IconButton
                         size="large"
                         edge="start"
                         color="inherit"
@@ -62,25 +65,25 @@ const Layout = () => {
                     >
                         <MenuIcon />
                     </IconButton>
-                    <Menu
-                        id="menu-appbar"
-                        anchorEl={anchorEl2}
-                        anchorOrigin={{
-                            vertical: 'top',
-                            horizontal: 'right',
-                        }}
-                        keepMounted
-                        transformOrigin={{
-                            vertical: 'top',
-                            horizontal: 'right',
-                        }}
-                        open={Boolean(anchorEl2)}
-                        onClose={() => setAnchorEl2(null)}
-                    >
-                        {pages.map(page => <MenuItem key={page.name} onClick={() => setAnchorEl2(null)}>
-                            <NavLink to={page.path} style={{ textDecoration: 'none' }}>{page.name}</NavLink>
-                        </MenuItem>)}
-                    </Menu> </>}
+                        <Menu
+                            id="menu-appbar"
+                            anchorEl={anchorEl2}
+                            anchorOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            keepMounted
+                            transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                            open={Boolean(anchorEl2)}
+                            onClose={() => setAnchorEl2(null)}
+                        >
+                            {pages.map(page => <MenuItem key={page.name} onClick={() => setAnchorEl2(null)}>
+                                <NavLink to={page.path} style={{ textDecoration: 'none' }}>{page.name}</NavLink>
+                            </MenuItem>)}
+                        </Menu> </>}
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                         We Dance
                     </Typography>

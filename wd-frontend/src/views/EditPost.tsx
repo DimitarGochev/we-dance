@@ -1,7 +1,5 @@
 import { useForm } from "react-hook-form";
-import { UsersClientService } from "../services/users-service";
-import { Box, Button, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
-import { User } from "../models/User";
+import { Box, Button, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { PostsClientService } from "../services/posts-service";

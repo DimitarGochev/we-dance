@@ -1,14 +1,40 @@
-import { Box, Button, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
+import { Box, Button, TextField, Typography } from "@mui/material";
 import { useForm } from "react-hook-form";
-import { UsersClientService } from "../services/users-service";
 import { useNavigate } from "react-router-dom";
 import { RegisterService } from "../services/register-service";
+import { useState } from "react";
+import { yupResolver } from "@hookform/resolvers/yup"
+import * as yup from "yup"
 
 const Register = () => {
-    const { register, handleSubmit, reset, formState: { errors } } = useForm();
+    yup.setLocale({
+        mixed: {
+            required: 'Required Field'
+        },
+        string: {
+            min: 'Please enter at least 1 character',
+            max: 'Max accepted lenght exceeded',
+            email: 'Please enter a valid email',
+            matches: 'The passsword must contain at least 6 characters, 1 lower case and 1 capital case letters and 1 special character.'
+        }
+    });
+    const schema = yup
+        .object({
+            firstName: yup.string().required().min(1).max(20),
+            lastName: yup.string().required().min(1).max(20),
+            email: yup.string().required().email(),
+            password: yup.string().required().matches(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{6,20}/),
+            avatar: yup.string().url()
+        })
+        .required()
+
+    const { register, handleSubmit, reset, formState: { errors } } = useForm({
+        resolver: yupResolver(schema),
+    });
+    const [error, setError] = useState<{ message: string }>();
     const navigate = useNavigate();
     const onSubmit = (user: any) => {
-        RegisterService.register(user).then((res: any) => navigate('/login')).catch((error) => console.log(error));
+        RegisterService.register(user).then((res: any) => navigate('/login')).catch((error) => setError(error));
     }
     const onLogin = () => {
         navigate('/login');
@@ -38,14 +64,15 @@ const Register = () => {
                 gap: '10px',
             }}>
                 <TextField {...register("firstName", { required: true })} label="First name" variant="outlined" />
-                {errors.firstName && <span>This field is required</span>}
+                {errors.firstName && <span style={{ textAlign: 'center' }}>{errors.firstName.message}</span>}
                 <TextField {...register("lastName", { required: true })} label="Last name" variant="outlined" />
-                {errors.lastName && <span>This field is required</span>}
+                {errors.lastName && <span style={{ textAlign: 'center' }}>{errors.lastName.message}</span>}
                 <TextField {...register("email", { required: true, maxLength: 15 })} label="Email" variant="outlined" />
-                {errors.email && <span>This field is required</span>}
+                {errors.email && <span style={{ textAlign: 'center' }}>{errors.email.message}</span>}
                 <TextField {...register("password", { required: true })} label="Password" variant="outlined" type="password" />
-                {errors.password && <span>This field is required</span>}
+                {errors.password && <span style={{ textAlign: 'center' }}>{errors.password.message}</span>}
                 <TextField {...register("avatar")} label="Avatar" variant="outlined" />
+                {errors.avatar && <span style={{ textAlign: 'center' }}>{errors.avatar.message}</span>}
 
                 <Button type='submit' variant="outlined" sx={{ width: '100%' }}>Sign up</Button>
                 <Button
@@ -55,6 +82,7 @@ const Register = () => {
                     onClick={() => onLogin()}
                 >Login</Button>
             </Box>
+            {error && <Typography variant='subtitle1' color='red' mb={'20px'}>{error.message}</Typography>}
         </Box>
     )
 }

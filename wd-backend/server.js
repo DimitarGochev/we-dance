@@ -32,7 +32,11 @@ app.use('/comments', commentRouter);
 app.post('/login', async (req, res) => {
     const user = await User.findOne({ 'email': req.body.email, 'password': req.body.password }).select("-password -__v");
     if (user) {
-        res.status(200).json(user);
+        if (user.status !== 'active') {
+            res.status(400).json({ message: 'Your account is ' + user.status + '. Please contact your administrator.'})
+        } else {
+            res.status(200).json(user);
+        }
     } else {
         res.status(401).json({ message: 'Invalid email or password' });
     }
